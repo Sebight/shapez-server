@@ -19,9 +19,7 @@ type Player = {
 }
 
 app.get('/leaderboard/all', async (req: any, res: any) => {
-    mongoose.connect(process.env.MONGOURI);
-
-    player.find({}, function (err: any, users: Player[]) {
+    player.find({}, (err: any, users: Player[]) => {
         let userMap : Player[] = [];
         console.log(userMap);
 
@@ -35,19 +33,17 @@ app.get('/leaderboard/all', async (req: any, res: any) => {
 });
 
 app.post('/leaderboard/new', async (req: any, res: any) => {
-
-    mongoose.connect(process.env.MONGOURI);
-
     let entryData = req.body.leaderboardData;
-
+    
     let newScoreEntry = await player.create({
         username: entryData.username,
         score: entryData.score
     })
-
+    
     await newScoreEntry.save();
 });
 
 app.listen(process.env.PORT, () => {
+    mongoose.connect(process.env.MONGOURI);
     console.log(`Listening on port ${process.env.PORT}`);
 });
